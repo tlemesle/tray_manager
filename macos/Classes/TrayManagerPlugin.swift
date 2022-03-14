@@ -47,6 +47,9 @@ public class TrayManagerPlugin: NSObject, FlutterPlugin, NSMenuDelegate {
         case "setIcon":
             setIcon(call, result: result)
             break
+        case "setText":
+            setText(call, result: result)
+            break
         case "setToolTip":
             setToolTip(call, result: result)
             break
@@ -180,6 +183,19 @@ public class TrayManagerPlugin: NSObject, FlutterPlugin, NSMenuDelegate {
         
         result(true)
     }
+
+    public func setText(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if !_inited { _init() }
+
+        let args:[String: Any] = call.arguments as! [String: Any]
+        let text: String =  args["text"] as! String;
+
+        if let button = statusItem.button {
+            button.title = text
+        }
+
+        result(true)
+    }
     
     public func setToolTip(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let args:[String: Any] = call.arguments as! [String: Any]
@@ -196,19 +212,11 @@ public class TrayManagerPlugin: NSObject, FlutterPlugin, NSMenuDelegate {
         let args:[String: Any] = call.arguments as! [String: Any]
         statusItemMenu.removeAllItems()
         statusItemMenu = createContextMenu(args)
-        statusItemMenu.delegate = self
         result(true)
     }
     
     public func popUpContextMenu(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        statusItem.menu = statusItemMenu
-        statusItem.button?.performClick(nil)
+        statusItem.popUpMenu(statusItemMenu);
         result(true)
-    }
-    
-    // NSMenuDelegate
-    
-    public func menuDidClose(_ menu: NSMenu) {
-        statusItem.menu = nil
     }
 }
