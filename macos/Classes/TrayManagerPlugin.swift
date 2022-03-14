@@ -65,7 +65,7 @@ public class TrayManagerPlugin: NSObject, FlutterPlugin, NSMenuDelegate {
     }
     
     private func _init() {
-        statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
+        statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
         if let button = statusItem.button {
             button.action = #selector(self.statusItemButtonClicked(sender:))
             button.sendAction(on: [.leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp])
