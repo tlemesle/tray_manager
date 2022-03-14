@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
@@ -58,18 +57,14 @@ class TrayManager {
     }
   }
 
-  /// Whether any listeners are currently registered.
   bool get hasListeners {
     return _listeners.isNotEmpty;
   }
 
-  /// Register a closure to be called when the tray events.
   void addListener(TrayListener listener) {
     _listeners.add(listener);
   }
 
-  /// Remove a previously registered closure from the list of closures that are
-  /// notified when the tray events.
   void removeListener(TrayListener listener) {
     _listeners.remove(listener);
   }
@@ -121,6 +116,14 @@ class TrayManager {
     await _channel.invokeMethod('setToolTip', arguments);
   }
 
+  /// Sets the hover text for this tray icon.
+  Future<void> setText(String text) async {
+    final Map<String, dynamic> arguments = {
+      'text': text,
+    };
+    await _channel.invokeMethod('setText', arguments);
+  }
+
   /// Sets the context menu for this icon.
   Future<void> setContextMenu(List<MenuItem> items) async {
     _itemMap = _indexItemMap(items);
@@ -135,7 +138,6 @@ class TrayManager {
     await _channel.invokeMethod('popUpContextMenu');
   }
 
-  /// The bounds of this tray icon.
   Future<Rect> getBounds() async {
     final Map<String, dynamic> arguments = {
       'devicePixelRatio': window.devicePixelRatio,
